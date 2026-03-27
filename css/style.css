@@ -1,0 +1,115 @@
+:root {
+    --bg-color: #f4f1ea; /* slightly vintage paper tone */
+    --text-color: #1a1a1a;
+    --accent-color: #000;
+    --card-bg: #ffffff;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Space Grotesk', Helvetica, Arial, sans-serif;
+    padding-bottom: 80px; /* For mobile scroll spacing */
+}
+
+/* Navbar */
+.navbar {
+    background-color: #e8e4d9 !important; /* Slightly darker vintage tone for nav */
+    box-shadow: 0 1px 10px rgba(0,0,0,0.05);
+}
+
+.nav-link {
+    color: #555 !important;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.2rem;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--accent-color) !important;
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Base Elements */
+.card {
+    background-color: var(--card-bg);
+}
+
+.btn {
+    letter-spacing: 0.5px;
+    transition: transform 0.1s;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-dark {
+    background-color: #1a1a1a;
+    border-color: #1a1a1a;
+}
+
+.btn-dark:hover {
+    background-color: #000;
+    border-color: #000;
+}
+
+.app-section {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tables and Forms */
+.table th {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: none;
+    border-color: #000;
+    background-color: #fff;
+}
+
+/* Printing logic */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #print-area, #print-area * {
+        visibility: visible;
+    }
+    #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0 !important;
+    }
+    .modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        background-color: transparent !important;
+    }
+    .modal-dialog {
+        max-width: 100%;
+        margin: 0;
+    }
+    .modal-content {
+        border: none;
+        box-shadow: none;
+    }
+    .modal-header, .modal-footer {
+        display: none !important;
+    }
+}
