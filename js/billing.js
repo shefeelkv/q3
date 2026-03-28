@@ -531,6 +531,55 @@ const billing = {
         }
     },
 
+    generateImageBlob: async function(format = 'jpeg') {
+        const originalElement = document.getElementById('print-area');
+        if(!originalElement) throw new Error("Print area not found");
+
+        const element = originalElement.cloneNode(true);
+        const images = element.getElementsByTagName('img');
+        for (let img of Array.from(images)) {
+            const origImg = document.getElementById(img.id) || document.querySelector(`img[src="${img.getAttribute('src')}"]`);
+            if (!origImg || origImg.naturalWidth === 0 || !origImg.complete) {
+                img.parentNode.removeChild(img);
+            }
+        }
+
+        const tempContainer = document.createElement('div');
+        tempContainer.style.cssText = "position: absolute; left: -9999px; top: -9999px; width: 800px; background: white; padding: 20px; z-index: -9999;";
+        tempContainer.appendChild(element);
+        document.body.appendChild(tempContainer);
+
+        tempContainer.offsetHeight;
+        await new Promise(r => setTimeout(r, 100));
+
+        try {
+            // Check if html2canvas is loaded globally
+            if (typeof html2canvas === 'undefined') {
+                throw new Error("html2canvas library is not loaded.");
+            }
+
+            const canvas = await html2canvas(tempContainer, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+                ignoreElements: (node) => {
+                    return node.tagName === 'LINK' && node.href && (node.href.includes('fonts.googleapis') || node.href.includes('fonts.gstatic'));
+                }
+            });
+            
+            return new Promise((resolve, reject) => {
+                const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
+                canvas.toBlob((blob) => {
+                    if (blob) resolve(blob);
+                    else reject(new Error("Canvas to Blob failed"));
+                }, mimeType, 0.98);
+            });
+        } finally {
+            if(document.body.contains(tempContainer)) document.body.removeChild(tempContainer);
+        }
+    },
+
     shareBill: async function() {
         const btn = document.getElementById('btn-share-bill');
         let origContent = '';
@@ -549,11 +598,14 @@ const billing = {
             const grandTotalStr = document.getElementById('print-grand-total').innerText;
             
             const textMsg = `Thank you for shopping at Q3 Fit. Your bill total is ${grandTotalStr}.`;
-            const fileName = `Q3Fit-Bill-${billId.replace('#', '')}.pdf`;
+            const fileName = `Q3Fit-Bill-${billId.replace('#', '')}.png`;
+
+            let imageBlob = null;
+            let sharedViaAPI = false;
 
             try {
-                const pdfBlob = await this.generatePdfBlob(fileName);
-                const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+                imageBlob = await this.generateImageBlob('png');
+                const file = new File([imageBlob], fileName, { type: 'image/png' });
 
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     await navigator.share({
@@ -561,15 +613,29 @@ const billing = {
                         title: 'Q3 Fit Invoice',
                         text: textMsg
                     });
+                    sharedViaAPI = true;
                     return; // Success natively
                 } else {
-                    console.log("Web Share API not supported for files, falling back to text WA link.");
+                    console.log("Web Share API not supported for files, falling back to WA link.");
                 }
-            } catch(pdfErr) {
-                console.error("PDF Generation failed for share, falling back to WA link immediately:", pdfErr);
+            } catch(imgErr) {
+                console.error("Image Generation failed for share, falling back to WA link immediately:", imgErr);
             }
 
-            // Fallback natively to WhatsApp link without the file
+            // Fallback natively to WhatsApp link without the file attached, but try clipboard
+            if (!sharedViaAPI && imageBlob && navigator.clipboard && navigator.clipboard.write) {
+                try {
+                    await navigator.clipboard.write([
+                        new ClipboardItem({
+                            [imageBlob.type]: imageBlob
+                        })
+                    ]);
+                    alert("Bill screenshot copied to clipboard! Please paste it in the WhatsApp chat that opens.");
+                } catch(clipErr) {
+                    console.error("Clipboard copy failed:", clipErr);
+                }
+            }
+
             let waLink = `https://wa.me/`;
             if(customerPhone && customerPhone.length >= 10) waLink += `${customerPhone}?text=${encodeURIComponent(textMsg)}`;
             else waLink += `?text=${encodeURIComponent(textMsg)}`;

@@ -1,14 +1,15 @@
-const CACHE_NAME = 'q3fit-app-v3';
+const CACHE_NAME = 'q3fit-app-v4';
 const urlsToCache = [
-  './',
-  './index.html',
-  './css/style.css',
-  './js/app.js',
-  './js/db.js',
-  './js/inventory.js',
-  './js/customers.js',
-  './js/billing.js',
-  './js/dashboard.js',
+  '/',
+  '/index.html',
+  '/css/style.css',
+  '/js/app.js',
+  '/js/db.js',
+  '/js/inventory.js',
+  '/js/customers.js',
+  '/js/billing.js',
+  '/js/dashboard.js',
+  '/manifest.json',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
   'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css',
@@ -20,8 +21,14 @@ const urlsToCache = [
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME).then(cache => {
+      // Individually cache files to prevent one 404 from halting the entire installation
+      return Promise.all(
+        urlsToCache.map(url => {
+          return cache.add(url).catch(err => console.warn('SW Install: Missing asset skipped - ', url));
+        })
+      );
+    })
   );
 });
 

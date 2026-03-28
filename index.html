@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Q3 Fit - Billing & Management</title>
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/manifest.json" />
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -36,7 +36,7 @@
     <nav class="navbar navbar-expand-lg border-bottom fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#dashboard">
-                <img src="assets/logo.png" alt="Q3 FIT Logo" width="40" height="40" class="me-2" onerror="this.src=''; this.style.display='none'; document.getElementById('brand-text').style.display='inline';">
+                <img src="/icons/icon-192.png" alt="Q3 FIT Logo" width="40" height="40" class="me-2" onerror="this.src=''; this.style.display='none'; document.getElementById('brand-text').style.display='inline';">
                 <span id="brand-text" style="display:none; font-weight: 700; font-family: 'Space Grotesk', Courier, monospace; letter-spacing: 1px;">Q3 FIT</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -342,7 +342,7 @@
                     <div id="print-area" class="p-4" style="color: #000; font-family: 'Space Grotesk', Helvetica, sans-serif;">
                         <div class="text-center mb-4">
                             <!-- Premium Centered Header -->
-                            <img src="assets/logo.png" alt="Q3 FIT" style="max-height: 80px;" onerror="this.src=''; this.style.display='none'; document.getElementById('print-brand-text').style.display='block';">
+                            <img src="/icons/icon-192.png" alt="Q3 FIT" style="max-height: 80px;" onerror="this.src=''; this.style.display='none'; document.getElementById('print-brand-text').style.display='block';">
                             <h1 id="print-brand-text" style="display:none; font-family: 'Courier New', Courier, monospace; font-weight: 900; letter-spacing: 4px; margin: 0;">Q3 FIT</h1>
                             <p class="mb-0 text-muted mt-1" style="font-size: 0.9em; letter-spacing: 1px; text-transform: uppercase;">Vintage Clothing Store</p>
                             <hr style="border-top: 2px dashed #ccc; margin: 15px 0;">
@@ -403,6 +403,7 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.4/dist/dexie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <script src="js/db.js"></script>
