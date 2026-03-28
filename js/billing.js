@@ -544,12 +544,30 @@ const billing = {
         await new Promise(resolve => setTimeout(resolve, 50));
 
         try {
-            const billId = document.getElementById('print-bill-id').innerText;
-            const customerPhone = document.getElementById('print-customer-phone').innerText.replace(/\D/g, '');
+            const billIdRaw = document.getElementById('print-bill-id').innerText;
+            const billId = billIdRaw.replace('#', '');
+            const customerName = document.getElementById('print-customer-name').innerText;
+            const customerPhoneRaw = document.getElementById('print-customer-phone').innerText;
+            const customerPhone = customerPhoneRaw.replace(/\D/g, '');
+            const billDate = document.getElementById('print-bill-date').innerText;
             const grandTotalStr = document.getElementById('print-grand-total').innerText;
             
-            const textMsg = `Thank you for shopping at Q3 Fit. Your bill total is ${grandTotalStr}.`;
-            const fileName = `Q3Fit-Bill-${billId.replace('#', '')}.pdf`;
+            let itemsListStr = '';
+            const itemRows = document.querySelectorAll('#print-items tr');
+            itemRows.forEach(row => {
+                const cols = row.querySelectorAll('td');
+                if (cols.length === 4) {
+                    const itemName = cols[0].innerText.trim();
+                    const qty = cols[1].innerText.trim();
+                    const price = cols[2].innerText.trim();
+                    const total = cols[3].innerText.trim();
+                    itemsListStr += `▪️ ${itemName}\n   ${qty} x ${price} = ${total}\n`;
+                }
+            });
+
+            const textMsg = `*Q3 FIT* 🛍️\n_Vintage Clothing Store_\n-----------------------------------\n*Invoice:* ${billIdRaw}\n*Date:* ${billDate}\n*Customer:* ${customerName} ${customerPhoneRaw ? '('+customerPhoneRaw+')' : ''}\n-----------------------------------\n*YOUR ITEMS:*\n${itemsListStr}-----------------------------------\n*TOTAL AMOUNT: ${grandTotalStr}* 💰\n-----------------------------------\nThank you for shopping at Q3 Fit! 🙏\n_Items can be exchanged within 7 days with original receipt._`;
+
+            const fileName = `Q3Fit-Bill-${billId}.pdf`;
 
             let pdfBlob = null;
             let sharedViaAPI = false;
