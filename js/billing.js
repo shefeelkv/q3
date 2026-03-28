@@ -565,7 +565,7 @@ const billing = {
                 }
             });
 
-            const textMsg = `*Q3 FIT* 🛍️\n_Vintage Clothing Store_\n-----------------------------------\n*Invoice:* ${billIdRaw}\n*Date:* ${billDate}\n*Customer:* ${customerName} ${customerPhoneRaw ? '('+customerPhoneRaw+')' : ''}\n-----------------------------------\n*YOUR ITEMS:*\n${itemsListStr}-----------------------------------\n*TOTAL AMOUNT: ${grandTotalStr}* 💰\n-----------------------------------\nThank you for shopping at Q3 Fit! 🙏\n_Items can be exchanged within 7 days with original receipt._`;
+            const textMsg = `*Q3 FIT* 🛍️\n_Unisex Clothing_\n-----------------------------------\n*Invoice:* ${billIdRaw}\n*Date:* ${billDate}\n*Customer:* ${customerName} ${customerPhoneRaw ? '('+customerPhoneRaw+')' : ''}\n-----------------------------------\n*YOUR ITEMS:*\n${itemsListStr}-----------------------------------\n*TOTAL AMOUNT: ${grandTotalStr}* 💰\n-----------------------------------\nThank you for shopping at Q3 Fit! 🙏\n_Items can be exchanged within 7 days with original receipt._`;
 
             const fileName = `Q3Fit-Bill-${billId}.pdf`;
 
